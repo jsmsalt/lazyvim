@@ -1,8 +1,4 @@
 return {
-  -- NOTE: GitHub Copilot Support
-  { import = "lazyvim.plugins.extras.ai.copilot" },
-  { import = "lazyvim.plugins.extras.ai.copilot-chat" },
-
   -- NOTE: Debugging Support
   { import = "lazyvim.plugins.extras.dap.core" },
 
@@ -17,6 +13,9 @@ return {
 
   -- NOTE: Testing Support
   { import = "lazyvim.plugins.extras.test.core" },
+
+  -- NOTE: UI
+  { import = "lazyvim.plugins.extras.ui.edgy" },
 
   -- NOTE: JSON Languaje Support
   { import = "lazyvim.plugins.extras.lang.docker" },

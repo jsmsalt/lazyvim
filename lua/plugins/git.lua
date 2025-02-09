@@ -1,13 +1,67 @@
 return {
+  -- NOTE: Git Keymaps
   {
     "folke/which-key.nvim",
     opts = {
       spec = {
+        { "<leader>gl", group = "Git Log", mode = { "n", "x" } },
         { "<leader>gh", group = "Git Hunks", mode = { "n", "x" } },
         { "<leader>gd", group = "Git Diff", mode = { "n", "x" } },
+        { "<leader>gS", group = "Git Stash", mode = { "n", "x" } },
       },
     },
   },
+
+  {
+    "folke/snacks.nvim",
+    opts = {
+      picker = {},
+    },
+    keys = {
+      {
+        "<leader>gb",
+        false,
+      },
+      {
+        "<leader>gb",
+        function()
+          Snacks.picker.git_branches()
+        end,
+        desc = "Git Branches",
+      },
+      { "<leader>gl", false },
+      {
+        "<leader>glp",
+        function()
+          Snacks.picker.git_log()
+        end,
+        desc = "Git Log Project",
+      },
+      {
+        "<leader>gll",
+        function()
+          Snacks.picker.git_log_line()
+        end,
+        desc = "Git Log Line",
+      },
+      {
+        "<leader>glf",
+        function()
+          Snacks.picker.git_log_file()
+        end,
+        desc = "Git Log File",
+      },
+      { "<leader>gS", false },
+      {
+        "<leader>gSl",
+        function()
+          Snacks.picker.git_stash()
+        end,
+        desc = "Git Stash List",
+      },
+    },
+  },
+
   -- NOTE: GitSigns
   {
     "lewis6991/gitsigns.nvim",
@@ -47,6 +101,8 @@ return {
       { "<leader>gc", "<cmd>Neogit commit<cr>", desc = "Git Commit (Neogit)" },
       { "<leader>gP", "<cmd>Neogit push<cr>", desc = "Git Push (Neogit)" },
       { "<leader>gp", "<cmd>Neogit pull<cr>", desc = "Git Pull (Neogit)" },
+      { "<leader>gB", "<cmd>Neogit branch<cr>", desc = "Git Branch (Neogit)" },
+      { "<leader>gSs", "<cmd>Neogit stash<cr>", desc = "Git Stash (Neogit)" },
     },
     opts = {
       integrations = {
