@@ -6,11 +6,6 @@ return {
   -- NOTE: Debugging Support
   { import = "lazyvim.plugins.extras.dap.core" },
 
-  -- NOTE: Editor Utilities
-  { import = "lazyvim.plugins.extras.editor.harpoon2" },
-  { import = "lazyvim.plugins.extras.editor.illuminate" },
-  -- { import = "lazyvim.plugins.extras.editor.leap" },
-
   -- NOTE: Formatting Support
   { import = "lazyvim.plugins.extras.formatting.biome" },
 

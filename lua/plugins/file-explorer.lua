@@ -1,6 +1,6 @@
 return {
   -- NOTE: Disable Snacks Explorer
-  { "snacks.nvim", opts = { explorer = { enabled = false } } },
+  { "folke/snacks.nvim", opts = { explorer = { enabled = false } } },
 
   -- NOTE: Enable OIL as default File Explorer
   {
