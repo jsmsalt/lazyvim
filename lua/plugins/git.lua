@@ -103,6 +103,12 @@ return {
       { "<leader>gp", "<cmd>Neogit pull<cr>", desc = "Git Pull (Neogit)" },
       { "<leader>gB", "<cmd>Neogit branch<cr>", desc = "Git Branch (Neogit)" },
       { "<leader>gSs", "<cmd>Neogit stash<cr>", desc = "Git Stash (Neogit)" },
+      { "<leader>gf", "<cmd>Neogit fetch<cr>", desc = "Git Fetch (Neogit)" },
+      { "<leader>gm", "<cmd>Neogit merge<cr>", desc = "Git Merge (Neogit)" },
+      { "<leader>gr", "<cmd>Neogit reset<cr>", desc = "Git Reset (Neogit)" },
+      { "<leader>gt", "<cmd>Neogit tag<cr>", desc = "Git Tag (Neogit)" },
+      { "<leader>gdd", "<cmd>Neogit diff<cr>", desc = "Git Diff (Neogit)" },
+      { "<leader>gll", "<cmd>Neogit log<cr>", desc = "Git Log (Neogit)" },
     },
     opts = {
       integrations = {
