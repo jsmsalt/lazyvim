@@ -1,23 +1,15 @@
-local prompts = {
-  -- Code related prompts
-  Explain = "Please explain how the following code works.",
-  Review = "Please review the following code and provide suggestions for improvement.",
-  Tests = "Please explain how the selected code works, then generate unit tests for it.",
-  Refactor = "Please refactor the following code to improve its clarity and readability.",
-  FixCode = "Please fix the following code to make it work as intended.",
-  FixError = "Please explain the error in the following text and provide a solution.",
-  BetterNamings = "Please provide better names for the following variables and functions.",
-  Documentation = "Please provide documentation for the following code.",
-  SwaggerApiDocs = "Please provide documentation for the following API using Swagger.",
-  SwaggerJsDocs = "Please write JSDoc for the following API using Swagger.",
-  -- Text related prompts
-  Summarize = "Please summarize the following text.",
-  Spelling = "Please correct any grammar and spelling errors in the following text.",
-  Wording = "Please improve the grammar and wording of the following text.",
-  Concise = "Please rewrite the following text to make it more concise.",
-}
-
 return {
+  -- NOTE: AI Chat with Copilot
+  {
+    "folke/which-key.nvim",
+    optional = true,
+    opts = {
+      spec = {
+        { "<leader>a", group = "ai" },
+      },
+    },
+  },
+
   -- -- NOTE: AI Autocompletion with Supermaven
   -- {
   --   "supermaven-inc/supermaven-nvim",
@@ -77,181 +69,60 @@ return {
       server_opts_overrides = {},
     },
   },
-
-  -- NOTE: AI Chat with Copilot
   {
-    "folke/which-key.nvim",
-    optional = true,
-    opts = {
-      spec = {
-        { "<leader>a", group = "ai" },
-      },
-    },
-  },
-  {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    -- version = "v3.3.0", -- Use a specific version to prevent breaking changes
+    "olimorris/codecompanion.nvim",
     dependencies = {
-      { "nvim-telescope/telescope.nvim" }, -- Use telescope for help actions
-      { "nvim-lua/plenary.nvim" },
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
     },
-    opts = {
-      question_header = "## User ",
-      answer_header = "## Copilot ",
-      error_header = "## Error ",
-      prompts = prompts,
-      auto_follow_cursor = false, -- Don't follow the cursor after getting response
-      mappings = {
-        -- Use tab for completion
-        complete = {
-          detail = "Use @<Tab> or /<Tab> for options.",
-          insert = "<Tab>",
-        },
-        -- Close the chat
-        close = {
-          normal = "q",
-          insert = "<C-c>",
-        },
-        -- Reset the chat buffer
-        reset = {
-          normal = "<C-x>",
-          insert = "<C-x>",
-        },
-        -- Submit the prompt to Copilot
-        submit_prompt = {
-          normal = "<CR>",
-          insert = "<C-CR>",
-        },
-        -- Accept the diff
-        accept_diff = {
-          normal = "<C-y>",
-          insert = "<C-y>",
-        },
-        -- Show help
-        show_help = {
-          normal = "g?",
-        },
-      },
-    },
-    config = function(_, opts)
-      local chat = require("CopilotChat")
-      chat.setup(opts)
-
-      local select = require("CopilotChat.select")
-      vim.api.nvim_create_user_command("CopilotChatVisual", function(args)
-        chat.ask(args.args, { selection = select.visual })
-      end, { nargs = "*", range = true })
-
-      -- Inline chat with Copilot
-      vim.api.nvim_create_user_command("CopilotChatInline", function(args)
-        chat.ask(args.args, {
-          selection = select.visual,
-          window = {
-            layout = "float",
-            relative = "cursor",
-            width = 1,
-            height = 0.4,
-            row = 1,
-          },
-        })
-      end, { nargs = "*", range = true })
-
-      -- Restore CopilotChatBuffer
-      vim.api.nvim_create_user_command("CopilotChatBuffer", function(args)
-        chat.ask(args.args, { selection = select.buffer })
-      end, { nargs = "*", range = true })
-
-      -- Custom buffer for CopilotChat
-      vim.api.nvim_create_autocmd("BufEnter", {
-        pattern = "copilot-*",
-        callback = function()
-          vim.opt_local.relativenumber = true
-          vim.opt_local.number = true
-
-          -- Get current filetype and set it to markdown if the current filetype is copilot-chat
-          local ft = vim.bo.filetype
-          if ft == "copilot-chat" then
-            vim.bo.filetype = "markdown"
-          end
-        end,
-      })
-    end,
-    event = "VeryLazy",
     keys = {
-      -- Show prompts actions with telescope
-      {
-        "<leader>ap",
-        function()
-          local actions = require("CopilotChat.actions")
-          require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
-        end,
-        desc = "CopilotChat - Prompt actions",
-      },
-      {
-        "<leader>ap",
-        ":lua require('CopilotChat.integrations.telescope').pick(require('CopilotChat.actions').prompt_actions({selection = require('CopilotChat.select').visual}))<CR>",
-        mode = "x",
-        desc = "CopilotChat - Prompt actions",
-      },
-      -- Code related commands
-      { "<leader>ae", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
-      { "<leader>at", "<cmd>CopilotChatTests<cr>", desc = "CopilotChat - Generate tests" },
-      { "<leader>ar", "<cmd>CopilotChatReview<cr>", desc = "CopilotChat - Review code" },
-      { "<leader>aR", "<cmd>CopilotChatRefactor<cr>", desc = "CopilotChat - Refactor code" },
-      { "<leader>an", "<cmd>CopilotChatBetterNamings<cr>", desc = "CopilotChat - Better Naming" },
-      -- Chat with Copilot in visual mode
-      {
-        "<leader>av",
-        ":CopilotChatVisual",
-        mode = "x",
-        desc = "CopilotChat - Open in vertical split",
-      },
-      {
-        "<leader>ax",
-        ":CopilotChatInline<cr>",
-        mode = "x",
-        desc = "CopilotChat - Inline chat",
-      },
-      -- Custom input for CopilotChat
+      { "<leader>ap", "<cmd>CodeCompanionActions<cr>", desc = "CodeCompanion - Action Palette" },
+      { "<leader>ac", "<cmd>CodeCompanionChat<cr>", desc = "CodeCompanion - Chat" },
       {
         "<leader>ai",
         function()
-          local input = vim.fn.input("Ask Copilot: ")
-          if input ~= "" then
-            vim.cmd("CopilotChat " .. input)
-          end
+          vim.ui.input({
+            prompt = "Enter prompt: ",
+            default = "",
+            completion = "file",
+          }, function(input)
+            if input then
+              vim.cmd("CodeCompanionCmd " .. input)
+            end
+          end)
         end,
-        desc = "CopilotChat - Ask input",
+        desc = "CodeCompanion - Inline Prompt",
       },
-      -- Generate commit message based on the git diff
-      {
-        "<leader>am",
-        "<cmd>CopilotChatCommit<cr>",
-        desc = "CopilotChat - Generate commit message for all changes",
+    },
+    opts = {
+      strategies = {
+        chat = {
+          adapter = "copilot",
+          keymaps = {
+            send = {
+              modes = { n = "<C-s>", i = "<C-s>" },
+            },
+            close = {
+              modes = { n = "<C-q>", i = "<C-q>" },
+            },
+          },
+        },
+        inline = {
+          adapter = "copilot",
+        },
       },
-      -- Quick chat with Copilot
-      {
-        "<leader>aq",
-        function()
-          local input = vim.fn.input("Quick Chat: ")
-          if input ~= "" then
-            vim.cmd("CopilotChatBuffer " .. input)
-          end
-        end,
-        desc = "CopilotChat - Quick chat",
+      display = {
+        action_palette = {
+          width = 95,
+          height = 10,
+          prompt = "Prompt ", -- Prompt used for interactive LLM calls
+          provider = "default", -- default|telescope|mini_pick
+          opts = {
+            show_default_actions = true, -- Show the default actions in the action palette?
+            show_default_prompt_library = true, -- Show the default prompt library in the action palette?
+          },
+        },
       },
-      -- Debug
-      { "<leader>ad", "<cmd>CopilotChatDebugInfo<cr>", desc = "CopilotChat - Debug Info" },
-      -- Fix the issue with diagnostic
-      { "<leader>af", "<cmd>CopilotChatFixDiagnostic<cr>", desc = "CopilotChat - Fix Diagnostic" },
-      -- Clear buffer and chat history
-      { "<leader>al", "<cmd>CopilotChatReset<cr>", desc = "CopilotChat - Clear buffer and chat history" },
-      -- Toggle Copilot Chat Vsplit
-      { "<leader>av", "<cmd>CopilotChatToggle<cr>", desc = "CopilotChat - Toggle" },
-      -- Copilot Chat Models
-      { "<leader>a?", "<cmd>CopilotChatModels<cr>", desc = "CopilotChat - Select Models" },
-      -- Copilot Chat Agents
-      { "<leader>aa", "<cmd>CopilotChatAgents<cr>", desc = "CopilotChat - Select Agents" },
     },
   },
 
@@ -262,7 +133,7 @@ return {
     opts = function(_, opts)
       opts.right = opts.right or {}
       table.insert(opts.right, {
-        ft = "copilot-chat",
+        ft = "codecompanion",
         title = "Copilot Chat",
         size = { width = 50 },
       })
